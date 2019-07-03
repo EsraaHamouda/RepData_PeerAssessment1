@@ -1,0 +1,87 @@
+---
+title: "test"
+output: html_document
+ 
+
+---
+step1 
+```{r setup, include=FALSE}
+## Attaching package: 'dplyr'
+
+knitr::opts_chunk$set(echo = TRUE)
+library()
+library(knitr)
+library(dplyr)
+ data <- read.csv("D:/crs5/activity.csv")
+str(data)
+hist(tapply(data$steps,  data$date , FUN=sum), main = "Histogram", xlab = "Steps")
+summary(data)
+
+total_number_steps <- with(data, tapply(steps, as.factor(data$date), sum, na.rm = T))
+
+```
+step2 
+
+```{r cars}
+## Attaching package: 'dplyr'
+
+dataMedian<-median(total_number_steps, na.rm = FALSE)
+dataMean<-mean(total_number_steps, na.rm = FALSE)
+
+plot(total_number_steps, type = "l")
+```
+step 3  
+```{r pressure, echo=TRUE}
+
+steps_by_interval <- aggregate(steps ~ interval, data, mean)
+ 
+plot(steps_by_interval$interval, steps_by_interval$steps  , type = "l")
+```
+step 4 
+```{r pressure1 , echo=TRUE}
+
+s<-tapply(data$steps, data$interval) 
+m<-max(s)
+```
+
+step 5
+```{r pressure2 , echo=TRUE}
+
+cleandata<- data[!is.na(data$steps),]
+  
+hist(tapply(cleandata$steps,  cleandata$date , FUN=sum), main = "Histogram", xlab = "Steps")
+```
+
+step 6
+```{r pressure3 , echo=TRUE}
+data$steps[is.na(data$steps)]<-dataMean
+head(data)
+hist(tapply(data$steps,  data$date , FUN=sum), main = "Histogram2", xlab = "Steps2")
+```
+step 7
+```{r pressure4 , echo=TRUE}
+
+ newdataMedian<-median(data$steps, na.rm = FALSE)
+newdataMean<-mean(data$steps, na.rm = FALSE)
+```
+step 8
+```{r pressure5 , echo=TRUE}
+#install.packages("chron")
+#library(chron)
+#install.packages(" chron_2.3-53", repos = "http://cran.us.r-project.org")
+
+data$weekend =  chron::is.weekend(data$date)
+#library(dplyr)
+#install.packages("dplyr", repos = "http://cran.us.r-project.org")
+ weekdaysData<-subset(data, data$weekend )
+ 
+ weekendData<-subset(data, !data$weekend )
+```
+step 9
+```{r pressure6 , echo=TRUE}
+par(mfrow=c(1,2))
+hist(tapply(weekdaysData$steps,  weekdaysData$interval , FUN=sum), main = "weekdaysData", xlab = "weekdaysData")
+
+hist(tapply(weekendData$steps,  weekendData$interval , FUN=sum), main = "weekendData", xlab = "weekendData")
+
+```
